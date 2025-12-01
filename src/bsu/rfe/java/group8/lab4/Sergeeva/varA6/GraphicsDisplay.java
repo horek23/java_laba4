@@ -151,6 +151,12 @@ public class GraphicsDisplay extends JPanel {
             double cx = center.getX();
             double cy = center.getY();
 
+            if (onlyEvenDigits(point[1])) {
+                canvas.setColor(Color.GREEN);   // выделяем цветом
+            } else {
+                canvas.setColor(Color.BLACK); // обычные точки
+            }
+
             // --- КРУГ 11x11 ---
             Ellipse2D.Double circle = new Ellipse2D.Double(cx - r, cy - r, 11, 11);
             canvas.draw(circle);
@@ -219,5 +225,19 @@ public class GraphicsDisplay extends JPanel {
         Point2D.Double dest = new Point2D.Double();
         dest.setLocation(src.getX() + deltaX, src.getY() + deltaY);
         return dest;
+    }
+
+    //проверяет все ли цифры в целой  части четные
+    private boolean onlyEvenDigits(double value) {
+        int n = (int) Math.abs(value);
+        if (n == 0) return true;
+        while (n > 0) {
+            int digit = n % 10;
+            if (digit % 2 != 0) {
+                return false;
+            }
+            n /= 10;
+        }
+        return true;
     }
 }
