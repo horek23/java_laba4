@@ -41,8 +41,8 @@ public class GraphicsDisplay extends JPanel {
 
     public GraphicsDisplay() {
         setBackground(Color.WHITE);
-        graphicsStroke = new BasicStroke(2.0f, BasicStroke.CAP_BUTT,                       // Перо для рисования графика
-                BasicStroke.JOIN_ROUND, 10.0f, null, 0.0f);
+        graphicsStroke = new BasicStroke(3.0f, BasicStroke.CAP_BUTT,                          // Перо для рисования графика
+                BasicStroke.JOIN_ROUND, 10.0f, new float[]{10.0f, 10.0f}, 0.0f);
         axisStroke = new BasicStroke(2.0f, BasicStroke.CAP_BUTT,                          // Перо для рисования осей координат
                 BasicStroke.JOIN_MITER, 10.0f, null, 0.0f);
         markerStroke = new BasicStroke(1.0f, BasicStroke.CAP_BUTT,                        // Перо для рисования контуров маркеров
@@ -139,17 +139,28 @@ public class GraphicsDisplay extends JPanel {
     }
 
     protected void paintMarkers(Graphics2D canvas) {
+
         canvas.setStroke(markerStroke);
-        canvas.setColor(Color.RED);
-        canvas.setPaint(Color.RED);
+        canvas.setColor(Color.BLACK);
+        canvas.setPaint(Color.BLACK);
+
+        double r = 5.5;
 
         for (Double[] point : graphicsData) {
-            Ellipse2D.Double marker = new Ellipse2D.Double();
             Point2D.Double center = xyToPoint(point[0], point[1]);
-            Point2D.Double corner = shiftPoint(center, 3, 3);
-            marker.setFrameFromCenter(center, corner);
-            canvas.draw(marker);
-            canvas.fill(marker);
+            double cx = center.getX();
+            double cy = center.getY();
+
+            // --- КРУГ 11x11 ---
+            Ellipse2D.Double circle = new Ellipse2D.Double(cx - r, cy - r, 11, 11);
+            canvas.draw(circle);
+
+            // --- КРЕСТ ВНУТРИ ---
+            Line2D.Double hLine = new Line2D.Double(cx - r, cy, cx + r, cy);
+            Line2D.Double vLine = new Line2D.Double(cx, cy - r, cx, cy + r);
+
+            canvas.draw(hLine);
+            canvas.draw(vLine);
         }
     }
 
